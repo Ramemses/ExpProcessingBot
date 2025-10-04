@@ -7,27 +7,11 @@ from aiogram.types import Message
 from aiogram.enums import ParseMode
 
 from config import settings
-from handlers import user_router
+from handlers import user_router, direct_record_router
 
 
 logger = logging.getLogger(__name__)
 
-
-# def get_greeting():
-#     return "Привет, чепуха"
-
-# def my_wrapper():
-#     return "Я не ебу че ты пишешь"
-
-# @dispatcher.message(Command(commands="start"))
-# async def process_start_command(message: Message):
-#     response = get_greeting()
-#     await message.answer(response)
-
-# @dispatcher.message()
-# async def process_start_command(message: Message):
-#     response = my_wrapper()
-#     await message.answer(response)
 
 
 async def main():
@@ -47,13 +31,17 @@ async def main():
 
     logger.info('Connect routes')
     dispatcher.include_router(user_router)  
+    dispatcher.include_router(direct_record_router)  
 
 
 
     logger.info('Connect middlewares')
 
-
+    logger.info('Delete webhooks')
     await bot.delete_webhook(drop_pending_updates=True)
+
+
+    logger.info('Start polling')
     await dispatcher.start_polling(bot)
 
 
