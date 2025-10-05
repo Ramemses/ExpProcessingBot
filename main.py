@@ -7,7 +7,7 @@ from aiogram.types import Message
 from aiogram.enums import ParseMode
 
 from config import settings
-from handlers import user_router, direct_record_router
+from handlers import user_router, direct_record_router, indirect_record_router
 
 
 logger = logging.getLogger(__name__)
@@ -32,6 +32,7 @@ async def main():
     logger.info('Connect routes')
     dispatcher.include_router(user_router)  
     dispatcher.include_router(direct_record_router)  
+    dispatcher.include_router(indirect_record_router)
 
 
 
@@ -41,9 +42,10 @@ async def main():
     await bot.delete_webhook(drop_pending_updates=True)
 
 
-    logger.info('Start polling')
+    logger.info('Start polling...')
+    
     await dispatcher.start_polling(bot)
-
+    logger.info(f"Bot with version <{settings.version}> get started!")
 
 
 asyncio.run(main())

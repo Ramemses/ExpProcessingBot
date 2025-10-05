@@ -23,6 +23,7 @@ class BotSettings(BaseModel):
 class Settings(BaseSettings):
 
 
+    version: str = Field(alias="VERSION")
     bot: BotSettings   
     debug: bool = Field(alias="DEBUG")
 

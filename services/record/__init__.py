@@ -1,2 +1,3 @@
-from .direct import help_message as dr_help_message
-from .direct import parse_message as dr_parse_message
+
+from .direct import process as process_direct_measurements
+from .indirect import process as process_indirect_measurements

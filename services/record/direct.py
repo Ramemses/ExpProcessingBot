@@ -2,45 +2,16 @@
 # from decimal import Decimal
 
 from math import sqrt
+from .general import get_avarage, get_result
+
 from lexicon.record import (
-     direct_record_lexicon,
-     get_avarage_message,
      get_rms_message,
      get_rmsm_message,
      get_tpn_message,
      get_error_rate_message,
-     get_result_message,
 )
 
-def parse_message(message: str):
-     result = {"success": False}
-     try:
-          tmp = message.split("\n")
 
-          record_count = int(tmp[0])
-          records = [float(el) for el in tmp[1].split(', ')]
-
-
-          result["success"] = True
-          
-          if (len(tmp) == 3):
-               result.update(processing(record_count, records, float(tmp[2])))
-          else:
-              result.update(processing(record_count, records))
-          return result
-     except: 
-         return {"success": False}
-
-
-def help_message():
-    return direct_record_lexicon["help_message"]
-
-
-def get_avarage(record_count: int, records: list[float]):
-    result: float = sum(records) / record_count
-    message = get_avarage_message(record_count, records, result)
-    
-    return result, message
 
 
 def get_rms(record_count: int, records: list[float], avarage: float):
@@ -79,25 +50,9 @@ def get_error_rate(tpn: float, s_: float, instrument_err_rate: float ):
     return result, message
 
 
-def get_result(erate: float, value: float):
-    k = erate
-    while k < 1:
-        k *= 10
-          
-    if k // 10 == 1:
-        round_points = 2
-    else:
-        round_points = 1
-
-    rounded_erate = round(erate, round_points)
-    round_points_val = len(str(rounded_erate - int(rounded_erate))) - 2
-    rounded_value = round(value, round_points_val if round_points_val > 0 else 0)
-    
-    message = get_result_message(value, erate, rounded_erate, rounded_value)
-    return message
-
-
-def processing(record_count: int, records: list[float], instrument_err_rate: float = 0.0) -> dict:
+def process(record_count: int, records: list[float], instrument_err_rate: None = None) -> dict:
+    if instrument_err_rate is None:
+        instrument_err_rate = 0.0
 
     avarage, avarage_message = get_avarage(record_count, records) #count avarage value if records
     s, rms_message = get_rms(record_count, records, avarage) # count ...
